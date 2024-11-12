@@ -1,0 +1,23 @@
+name: Create GitHub Issue
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  create_issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Create GitHub Issue
+        uses: octokit/request-action@v2.x
+        with:
+          route: POST /repos/${{ github.repository }}/issues
+          title: "New Issue Created by GitHub Action"
+          body: "This issue was created automatically by the GitHub Action."
+          labels: "automated issue"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
