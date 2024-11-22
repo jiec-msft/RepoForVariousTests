@@ -22,6 +22,13 @@ jobs:
           name: ui-test-error-reports_${{ matrix.os }}_${{ matrix.ide_version }}
           path: "**/screenshots/*.png"
 
+      - name: Upload Some Attachments way 2
+        id: some-attachments
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-test-error-reports_${{ matrix.os }}_${{ matrix.ide_version }}
+          path: "**/screenshots/*.png"
+
       - name: Track failure with GitHub Issue
         # Don't add condition for testing purpose now.
         # if: failure()
@@ -31,9 +38,8 @@ jobs:
             const { owner, repo } = context.repo;
             const issueTitle = "UI test failed";
             const issueBody = `
-              See reports from failed UI tests in the attachments. 1: ${{ steps.upload_some_attachments.outputs }}, 2: ${{ steps.upload_some_attachments.artifact-id }},
-              3: ${{ steps.upload_some_attachments.artifact-url }}, 4: ${{ steps.upload_some_attachments.outputs.artifact-url }}, 5: ${{ steps.upload_some_attachments.output.artifact-url }},
-              6: ${{ steps.upload_some_attachments }}
+              See reports from failed UI tests in the attachments. 1: ${{ steps.upload_some_attachments.outputs.artifact-url }}, 2: ${{ steps.upload_some_attachments.outputs.artifact-id }},
+              3: ${{ steps.some-attachments.outputs.artifact-url }}
             `;
             const labels = ["automated issue"];
             const issue = await github.rest.issues.create({
