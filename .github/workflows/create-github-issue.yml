@@ -14,18 +14,30 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Create GitHub Issue
+      - name: upload-some-attachments
+        id: upload-some-attachments
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-test-error-reports_${{ matrix.os }}_${{ matrix.ide_version }}
+          path: "**/screenshots/*.png"
+
+      - name: Track failure with GitHub Issue
+        # Don't add condition for testing purpose now.
+        # if: failure()
         uses: actions/github-script@v6
         with:
           script: |
             const { owner, repo } = context.repo;
-            const issueTitle = "New Issue Created by GitHub Action";
-            const issueBody = "This issue was created automatically by the GitHub Action.";
+            const issueTitle = "UI test failed";
+            const issueBody = `
+              See reports from ${{ steps.upload-some-attachments.outputs.download-url }}"
+            `;
             const labels = ["automated issue"];
-            await github.rest.issues.create({
+            const issue = await github.rest.issues.create({
               owner,
               repo,
               title: issueTitle,
               body: issueBody,
               labels,
             });
+            return issue.data.number;
