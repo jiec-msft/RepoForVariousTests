@@ -22,26 +22,47 @@ jobs:
           name: reports
           path: "**/reports/**"
 
-      - name: Return file tail lines
-        id: return-tail-lines
-        run: |
-          tail -n 10 ./reports/tests-ui/build/reports/tests/test/classes/com.github.copilot.ui.test.CopilotChatTest.html > tail_output.txt
-          cat tail_output.txt
-          echo "tail_lines=$(cat tail_output.txt)" >> $GITHUB_OUTPUT
-          echo $GITHUB_OUTPUT
-
       - name: Track failure with GitHub Issue
+        # ./reports/tests-ui/build/reports/tests/test/classes/com.github.copilot.ui.test.CopilotChatTest.html
         # Don't add condition for testing purpose now.
         # if: failure()
         id: create-github-issue
         uses: actions/github-script@v7
         with:
           script: |
+            const fs = require('fs');
+            const readline = require('readline');
+              
+            async function readLastLines(filePath, numLines) {
+              const fileStream = fs.createReadStream(filePath);
+              const rl = readline.createInterface({
+                input: fileStream,
+                crlfDelay: Infinity
+              });
+            
+              const lines = [];
+              for await (const line of rl) {
+                lines.push(line);
+                if (lines.length > numLines) {
+                  lines.shift();
+                }
+              }
+            
+              return lines;
+            }
+              
+            readLastLines('./reports/tests-ui/build/reports/tests/test/classes/com.github.copilot.ui.test.CopilotChatTest.html', 10)
+            .then(lines => {
+              console.log(lines.join('\n'));
+            })
+            .catch(err => {
+              console.error(err);
+            });
+
             const { owner, repo } = context.repo;
             const issueTitle = "UI test failed";
             const issueBody = `
               See reports from failed UI tests in the attachments. [link](${{ steps.upload_some_attachments.outputs.artifact-url }})
-              Tailed logs: ${{steps.return-tail-lines.outputs.tail_lines}}
             `;
             const labels = ["automated issue"];
             const issue = await github.rest.issues.create({
