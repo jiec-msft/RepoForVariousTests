@@ -39,7 +39,6 @@ jobs:
               repo,
               title: issueTitle,
               body: issueBody,
-              labels,
-              parent: 1
+              labels
             });
-            return issue.data.number;
+            console.log("Created issue number: " + issue.data.number);
