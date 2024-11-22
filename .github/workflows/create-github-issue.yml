@@ -40,5 +40,6 @@ jobs:
               title: issueTitle,
               body: issueBody,
               labels,
+              parent: 1
             });
             return issue.data.number;
