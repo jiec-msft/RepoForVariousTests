@@ -19,12 +19,13 @@ jobs:
         id: upload_some_attachments
         uses: actions/upload-artifact@v4
         with:
-          name: ui-test-error-reports_${{ matrix.os }}_${{ matrix.ide_version }}
-          path: "**/screenshots/*.png"
+          name: reports
+          path: "**/reports/**"
 
       - name: Track failure with GitHub Issue
         # Don't add condition for testing purpose now.
         # if: failure()
+        id: create-github-issue
         uses: actions/github-script@v7
         with:
           script: |
@@ -42,3 +43,17 @@ jobs:
               labels
             });
             console.log(`Created issue https://github.com/${owner}/${repo}/issues/${issue.data.number}`);
+            return issue.data.number
+
+      - name: Download failure artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: reports
+          path: ./artifacts
+
+      - name: Unzip artifacts
+        run: unzip ./artifacts/reports.zip -d ./artifacts
+
+      - name: List files recursively
+        # Need to make it platform independent
+        run: ls -R ./artifacts
