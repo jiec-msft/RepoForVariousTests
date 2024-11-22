@@ -22,6 +22,12 @@ jobs:
           name: reports
           path: "**/reports/**"
 
+      - name: Return file tail lines
+        id: return-tail-lines
+        run: |
+          tail -n 10 ./reports/tests/test/classes/com.github.copilot.ui.test.CopilotChatTest.html > tail_output.txt
+          echo "::set-output name=tail_lines::$(cat tail_output.txt)"
+
       - name: Track failure with GitHub Issue
         # Don't add condition for testing purpose now.
         # if: failure()
@@ -33,6 +39,7 @@ jobs:
             const issueTitle = "UI test failed";
             const issueBody = `
               See reports from failed UI tests in the attachments. [link](${{ steps.upload_some_attachments.outputs.artifact-url }})
+              Tailed logs: ${{steps.return-tail-lines.outputs.tail_lines}}
             `;
             const labels = ["automated issue"];
             const issue = await github.rest.issues.create({
@@ -44,16 +51,3 @@ jobs:
             });
             console.log(`Created issue https://github.com/${owner}/${repo}/issues/${issue.data.number}`);
             return issue.data.number
-
-      - name: Download failure artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: reports
-          path: ./artifacts
-
-      - name: Unzip artifacts
-        run: unzip ./artifacts/reports.zip -d ./artifacts
-
-      - name: List files recursively
-        # Need to make it platform independent
-        run: ls -R ./artifacts
