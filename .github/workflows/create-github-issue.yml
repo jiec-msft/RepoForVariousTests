@@ -15,8 +15,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: upload-some-attachments
-        id: upload-some-attachments
+      - name: Upload Some Attachments
+        id: upload_some_attachments
         uses: actions/upload-artifact@v4
         with:
           name: ui-test-error-reports_${{ matrix.os }}_${{ matrix.ide_version }}
@@ -31,7 +31,9 @@ jobs:
             const { owner, repo } = context.repo;
             const issueTitle = "UI test failed";
             const issueBody = `
-              See reports from failed UI tests in the attachments. 1: ${{ github.steps.upload-some-attachments.outputs }}, 2: ${{ github.steps.upload-some-attachments.outputs.artifact-url }}"
+              See reports from failed UI tests in the attachments. 1: ${{ steps.upload_some_attachments.outputs }}, 2: ${{ steps.upload_some_attachments.artifact-id }},
+              3: ${{ steps.upload_some_attachments.artifact-url }}, 4: ${{ steps.upload_some_attachments.outputs.artifact-url }}, 5: ${{ steps.upload_some_attachments.output.artifact-url }},
+              6: ${{ steps.upload_some_attachments }}
             `;
             const labels = ["automated issue"];
             const issue = await github.rest.issues.create({
