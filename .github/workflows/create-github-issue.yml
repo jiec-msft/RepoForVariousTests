@@ -50,9 +50,11 @@ jobs:
             
               return lines;
             }
-              
+            
+            let lastLines = '';
             readLastLines('./reports/tests-ui/build/reports/tests/test/classes/com.github.copilot.ui.test.CopilotChatTest.html', 10)
             .then(lines => {
+              lastLines = lines.join('\n');
               console.log(lines.join('\n'));
             })
             .catch(err => {
@@ -63,6 +65,7 @@ jobs:
             const issueTitle = "UI test failed";
             const issueBody = `
               See reports from failed UI tests in the attachments. [link](${{ steps.upload_some_attachments.outputs.artifact-url }})
+              Logs: ${lastLines}
             `;
             const labels = ["automated issue"];
             const issue = await github.rest.issues.create({
