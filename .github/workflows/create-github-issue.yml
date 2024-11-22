@@ -41,4 +41,4 @@ jobs:
               body: issueBody,
               labels
             });
-            console.log("Created issue number: " + issue.data.number);
+            console.log("Created issue https://github.com/${owner}/${repo}/issues/${issue.data.number}");
