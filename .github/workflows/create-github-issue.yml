@@ -30,7 +30,7 @@ jobs:
             const { owner, repo } = context.repo;
             const issueTitle = "UI test failed";
             const issueBody = `
-              See reports from ${{ steps.upload-some-attachments.outputs.download-url }}"
+              See reports from ${{ steps.upload-some-attachments.outputs}}"
             `;
             const labels = ["automated issue"];
             const issue = await github.rest.issues.create({
