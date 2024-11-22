@@ -32,7 +32,8 @@ jobs:
           script: |
             const fs = require('fs');
             const readline = require('readline');
-              
+            const path = require('path');
+            
             async function readLastLines(filePath, numLines) {
               const fileStream = fs.createReadStream(filePath);
               const rl = readline.createInterface({
@@ -51,14 +52,18 @@ jobs:
               return lines;
             }
             
-            let lastLines = '';
-            await readLastLines('./reports/tests-ui/build/reports/tests/test/classes/com.github.copilot.ui.test.CopilotChatTest.html', 10)
-            .then(lines => {
-              lastLines = lines.join('\n');
-            })
-            .catch(err => {
-              console.error(err);
-            });
+            async function readAllFilesInDirectory(directory, numLines) {
+              const files = fs.readdirSync(directory);
+              let allLines = '';
+              for (const file of files) {
+                const filePath = path.join(directory, file);
+                if (fs.statSync(filePath).isFile()) {
+                  const lines = await readLastLines(filePath, numLines);
+                  allLines += `\nFile: ${file}\n${lines.join('\n')}\n`;
+                }
+              }
+              return allLines;
+            }
 
             const { owner, repo } = context.repo;
             const issueTitle = "UI test failed";
@@ -66,7 +71,7 @@ jobs:
               See reports from failed UI tests in the attachments. [link](${{ steps.upload_some_attachments.outputs.artifact-url }})
               Logs: 
               \`\`\`
-              ${lastLines}
+              ${await readAllFilesInDirectory('./reports/tests-ui/build/reports/tests/test/classes', 100)}
               \`\`\`
             `;
             const labels = ["automated issue"];
