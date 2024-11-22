@@ -25,7 +25,7 @@ jobs:
       - name: Return file tail lines
         id: return-tail-lines
         run: |
-          tail -n 10 ./reports/tests/test/classes/com.github.copilot.ui.test.CopilotChatTest.html > tail_output.txt
+          tail -n 10 ./reports/tests-ui/build/reports/tests/test/classes/com.github.copilot.ui.test.CopilotChatTest.html > tail_output.txt
           echo "::set-output name=tail_lines::$(cat tail_output.txt)"
 
       - name: Track failure with GitHub Issue
