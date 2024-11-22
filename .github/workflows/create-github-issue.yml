@@ -52,10 +52,10 @@ jobs:
             }
             
             let lastLines = '';
-            readLastLines('./reports/tests-ui/build/reports/tests/test/classes/com.github.copilot.ui.test.CopilotChatTest.html', 10)
+            await readLastLines('./reports/tests-ui/build/reports/tests/test/classes/com.github.copilot.ui.test.CopilotChatTest.html', 10)
             .then(lines => {
               lastLines = lines.join('\n');
-              console.log(lines.join('\n'));
+              console.log(lastLines);
             })
             .catch(err => {
               console.error(err);
