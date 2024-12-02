@@ -37,12 +37,12 @@ module.exports = async ({ github, context }) => {
   const { owner, repo } = context.repo;
   const issueTitle = "UI test failed";
   const issueBody = `
-    See reports from failed UI tests in the attachments. [link](${context.payload.artifactUrl})
-    Logs: 
-    \`\`\`
-    ${await readAllFilesInDirectory('./reports/tests-ui/build/reports/tests/test/classes', 100)}
-    \`\`\`
-    `;
+See reports from failed UI tests in the attachments. [link](${context.payload.artifactUrl})
+Logs: 
+\`\`\`
+${await readAllFilesInDirectory('./reports/tests-ui/build/reports/tests/test/classes', 100)}
+\`\`\`
+  `.trim();
   const labels = ["automated issue"];
   const issue = await github.rest.issues.create({
     owner,
