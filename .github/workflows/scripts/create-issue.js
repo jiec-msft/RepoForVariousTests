@@ -42,7 +42,7 @@ module.exports = async ({ github, context }) => {
     \`\`\`
     ${await readAllFilesInDirectory('./reports/tests-ui/build/reports/tests/test/classes', 100)}
     \`\`\`
-  `;
+    `;
   const labels = ["automated issue"];
   const issue = await github.rest.issues.create({
     owner,
