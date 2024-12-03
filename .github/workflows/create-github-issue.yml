@@ -28,7 +28,7 @@ jobs:
         with:
           script: |
             const createIssue = require('./.github/workflows/scripts/create-issue.js');
-            const github_run_id = ${{ github.run_id }};
-            const github_event_name = ${{ github.event_name }};
-            const github_ref = ${{ github.ref }};
+            const github_run_id = "${{ github.run_id }}";
+            const github_event_name = "${{ github.event_name }}";
+            const github_ref = "${{ github.ref }}";
             await createIssue({ github, github_event_name, github_ref, github_run_id, context});
