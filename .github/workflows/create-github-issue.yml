@@ -33,7 +33,5 @@ jobs:
             const github_ref = "${{ github.ref }}";
             const job = "${{ github.job }}";
             console.log(`job is ${job}`);
-            const job_id = "${{ github.job.id }}";
-            console.log(`job id is ${job_id}`);
             // github.variables is not available within the script
             await createIssue({ github, github_event_name, github_ref, github_run_id, context});
