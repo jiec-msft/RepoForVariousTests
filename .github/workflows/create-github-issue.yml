@@ -31,4 +31,4 @@ jobs:
             const github_run_id = ${{ github.run_id }};
             const github_event_name = ${{ github.event_name }};
             const github_ref = ${{ github.ref }};
-            await createIssue({ github_event_name, github_ref, github_run_id, context});
+            await createIssue({ github, github_event_name, github_ref, github_run_id, context});
