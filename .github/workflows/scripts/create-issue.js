@@ -33,7 +33,7 @@ async function readAllFilesInDirectory(directory, numLines) {
   return allLines;
 }
 
-module.exports = async () => {
+module.exports = async ({context}) => {
   const { owner, repo } = context.repo;
   const issueTitle = "UI test failed";
   const issueBody = `
