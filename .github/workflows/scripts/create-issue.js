@@ -33,14 +33,14 @@ async function readAllFilesInDirectory(directory, numLines) {
   return allLines;
 }
 
-module.exports = async ({github, context}) => {
+module.exports = async ({github_event_name, github_ref, github_run_id, context}) => {
   const { owner, repo } = context.repo;
   const issueTitle = "UI test failed";
   const issueBody = `
 See reports from failed UI tests in the attachments. [link](${context.payload.artifactUrl})
-- Event: ${github.event_name}
-- Ref: ${github.ref}
-- RunId: ${github.run_id}
+- Event: ${github_event_name}
+- Ref: ${github_ref}
+- RunId: ${github_run_id}
 Logs: 
 \`\`\`
 ${await readAllFilesInDirectory('./reports/tests-ui/build/reports/tests/test/classes', 100)}
